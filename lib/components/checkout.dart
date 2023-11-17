@@ -1,13 +1,18 @@
 // checkout_page.dart
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/cart_model.dart';
+import 'package:http/http.dart' as http;
 
 class CheckoutPage extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _paymentController = TextEditingController();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,17 +79,37 @@ class CheckoutPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Implement your checkout logic here
-                    // For example, you can navigate to a confirmation page.
+                  onPressed: () async {
                     String userName = _nameController.text;
                     String userAddress = _addressController.text;
                     String paymentDetails = _paymentController.text;
 
-                    // Use the user details as needed in your checkout logic
+                    // Convert the list of cart items to a JSON string
+                    String orderItems = jsonEncode(cart.cartItems);
 
-                    Navigator.pushNamed(context, '/confirmation');
+                    // Send the order information to the PHP script
+                    var response = await http.post(
+                      Uri.parse('https://your_server.com/place_order.php'),
+                      body: {
+                        'userName': userName,
+                        'userAddress': userAddress,
+                        'paymentDetails': paymentDetails,
+                        'orderItems': orderItems,
+                      },
+                    );
+
+                    // Check the response from the server
+                    if (response.statusCode == 200) {
+                      // Order placed successfully
+                      print(response.body);
+                      // Optionally, you can navigate to a confirmation page
+                      Navigator.pushNamed(context, '/confirmation');
+                    } else {
+                      // Error placing order
+                      print('Error placing order: ${response.body}');
+                    }
                   },
+
                   child: Text('Proceed to Checkout'),
                 ),
               ),

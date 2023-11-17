@@ -6,7 +6,6 @@ import '../models/products.dart';
 import 'package:provider/provider.dart';
 import '../models/cart_model.dart';
 
-
 class ProductList extends StatelessWidget {
   final List<Product> products;
 
@@ -16,7 +15,7 @@ class ProductList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Page'),
+        title: Text('Product List'),
       ),
       body: ListView.builder(
         itemCount: products.length,
@@ -27,7 +26,7 @@ class ProductList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProductDetailsPage(product: product),
+                  builder: (context) => ProductDetailsPage(product: product, productId: '',),
                 ),
               );
             },

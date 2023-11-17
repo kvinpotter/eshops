@@ -20,7 +20,7 @@ class _WelcomePageState extends State<WelcomePage> {
           children: [
             const Icon(Icons.shopping_cart,
             size: 80,
-            color: Colors.orange,),
+            color: Colors.blueAccent,),
             const SizedBox(height: 20,),
             const Text('Online Shop',
               style: TextStyle(
