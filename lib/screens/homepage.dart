@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<List<Product>> fetchProducts() async {
     // Replace the URL with your actual server endpoint
-    final response = await http.get(Uri.parse('https://your-server-endpoint/load_products.php'));
+    final response = await http.get(Uri.parse('https://127.0.0.1:3306/load_products.php'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
