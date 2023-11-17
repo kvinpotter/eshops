@@ -1,9 +1,9 @@
 <?php
 
-$servername = "your_database_server";
-$username = "your_database_username";
-$password = "your_database_password";
-$dbname = "your_database_name";
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "ellipsis_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
