@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: _currentIndex == 0
           ? FutureBuilder<List<Product>>(
-        // Replace FutureBuilder with a FutureBuilder to fetch products
+        
         future: fetchProducts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
