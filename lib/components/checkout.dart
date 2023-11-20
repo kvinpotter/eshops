@@ -1,11 +1,11 @@
 // checkout_page.dart
 
 import 'dart:convert';
+import 'package:eshops/screens/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/cart_model.dart';
 import 'package:http/http.dart' as http;
-import '../models/products.dart'; // Import your Product class
 
 class CheckoutPage extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
@@ -20,12 +20,6 @@ class CheckoutPage extends StatelessWidget {
       ),
       body: Consumer<CartModel>(
         builder: (context, cart, child) {
-          // Convert the list of cart items to a list of JSON-encodable maps
-          List<Map<String, dynamic>> orderItemsList = cart.cartItems.map((product) => product.toJson()).toList();
-
-          // Convert the list of maps to a JSON string
-          String orderItems = jsonEncode(orderItemsList);
-
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -37,8 +31,7 @@ class CheckoutPage extends StatelessWidget {
                     return ListTile(
                       title: Text(product.name),
                       subtitle: Text(
-                        'Price: \Tshs ${product.price.toStringAsFixed(2)}',
-                      ),
+                          'Price: \Tshs ${product.price.toStringAsFixed(2)}'),
                     );
                   },
                 ),
@@ -76,7 +69,8 @@ class CheckoutPage extends StatelessWidget {
                     ),
                     TextFormField(
                       controller: _paymentController,
-                      decoration: InputDecoration(labelText: 'Payment Details'),
+                      decoration:
+                      InputDecoration(labelText: 'Payment Details'),
                     ),
                   ],
                 ),
@@ -88,6 +82,9 @@ class CheckoutPage extends StatelessWidget {
                     String userName = _nameController.text;
                     String userAddress = _addressController.text;
                     String paymentDetails = _paymentController.text;
+
+                    // Convert the list of cart items to a JSON string
+                    String orderItems = jsonEncode(cart.cartItems);
 
                     // Send the order information to the PHP script
                     var response = await http.post(
@@ -105,11 +102,28 @@ class CheckoutPage extends StatelessWidget {
                     if (response.statusCode == 200) {
                       // Order placed successfully
                       print(response.body);
+
+                      // Show a success message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Order placed successfully'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+
                       // Optionally, you can navigate to a confirmation page
-                      Navigator.pushNamed(context, '/confirmation');
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
                     } else {
                       // Error placing order
                       print('Error placing order: ${response.body}');
+
+                      // Show an error message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error placing order'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
                     }
                   },
                   child: Text('Proceed to Checkout'),
