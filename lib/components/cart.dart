@@ -27,7 +27,7 @@ class CartPage extends StatelessWidget {
                     return ListTile(
                       title: Text(product.name),
                       subtitle: Text(
-                          'Price: \$${product.price.toStringAsFixed(2)}'),
+                          'Price: \Tshs ${product.price.toStringAsFixed(2)}'),
                       trailing: IconButton(
                         icon: Icon(Icons.remove_shopping_cart),
                         onPressed: () {
@@ -42,7 +42,7 @@ class CartPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  'Total Price: \$${cart.totalPrice.toStringAsFixed(2)}',
+                  'Total Price: \Tshs ${cart.totalPrice.toStringAsFixed(2)}',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),

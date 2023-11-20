@@ -1,4 +1,4 @@
-1// checkout_page.dart
+// checkout_page.dart
 
 import 'dart:convert';
 
@@ -11,8 +11,6 @@ class CheckoutPage extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _paymentController = TextEditingController();
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,7 @@ class CheckoutPage extends StatelessWidget {
                     return ListTile(
                       title: Text(product.name),
                       subtitle: Text(
-                          'Price: \$${product.price.toStringAsFixed(2)}'),
+                          'Price: \Tshs ${product.price.toStringAsFixed(2)}'),
                     );
                   },
                 ),
@@ -41,7 +39,7 @@ class CheckoutPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  'Total Price: \$${cart.totalPrice.toStringAsFixed(2)}',
+                  'Total Price: \Tshs ${cart.totalPrice.toStringAsFixed(2)}',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -71,7 +69,8 @@ class CheckoutPage extends StatelessWidget {
                     ),
                     TextFormField(
                       controller: _paymentController,
-                      decoration: InputDecoration(labelText: 'Payment Details'),
+                      decoration:
+                      InputDecoration(labelText: 'Payment Details'),
                     ),
                   ],
                 ),
@@ -89,7 +88,7 @@ class CheckoutPage extends StatelessWidget {
 
                     // Send the order information to the PHP script
                     var response = await http.post(
-                      Uri.parse('https://127.0.0.1:3306/order.php'),
+                      Uri.parse('http://192.168.100.44/order.php'),
                       body: {
                         'userName': userName,
                         'userAddress': userAddress,
@@ -109,7 +108,6 @@ class CheckoutPage extends StatelessWidget {
                       print('Error placing order: ${response.body}');
                     }
                   },
-
                   child: Text('Proceed to Checkout'),
                 ),
               ),

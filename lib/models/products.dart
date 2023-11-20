@@ -3,22 +3,23 @@
 class Product {
   final String key;
   final String name;
-  final String imageUrl;
+  final String description;
   final double price;
 
   Product({
     required this.key,
     required this.name,
-    required this.imageUrl,
+    required this.description,
     required this.price,
+
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       key: json['product_id'],
-      name: json['prduct_name'],
-      imageUrl: json['product_image'],
-      price: json['price'].toDouble(),
+      name: json['product_name'],
+      description: json['product_description'] ?? '',
+      price: double.tryParse(json['product_price'].toString()) ?? 0.0,
     );
   }
 }

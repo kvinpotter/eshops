@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;  // Import the http package
+import 'package:http/http.dart' as http;
 import 'package:eshops/models/products.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,12 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
-  late Product _product;
+  late Product _product = Product(
+    key: 'default',
+    name: 'Default Product',
+    price: 0.0,
+    description: '',
+  );
 
   @override
   void initState() {
@@ -26,29 +31,34 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   }
 
   Future<void> _loadProductDetails() async {
-    // Replace this URL with your API endpoint
-    final apiUrl = 'https://127.0.0.1:3306/products_details.php/${widget.productId}';
+    final apiUrl = 'http://192.168.100.44/product_details.php?productId=${widget.productId}';
+
 
     try {
+      print('Fetching product details from: $apiUrl');
+      print('Product ID: ${widget.productId}');
+
       final response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        setState(() {
-          // Create a Product object from the fetched data
-          _product = Product(
-            key: data['key'],
-            name: data['name'],
-            imageUrl: data['imageUrl'],
-            price: double.parse(data['price'].toString()),
-          );
-        });
+        if (response.body.isNotEmpty) {
+          final Map<String, dynamic> data = json.decode(response.body);
+          setState(() {
+            // Create a Product object from the fetched data
+            _product = Product(
+              key: data['product_id'],
+              name: data['product_name'],
+              price: double.parse(data['product_price'].toString()),
+              description: data['product_description'] ?? '',
+            );
+          });
+        } else {
+          print('Empty response body');
+        }
       } else {
-        // Handle errors if needed
         print('Failed to load product details. Status Code: ${response.statusCode}');
       }
     } catch (error) {
-      // Handle exceptions if needed
       print('Error loading product details: $error');
     }
   }
@@ -65,11 +75,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(
-              _product.imageUrl,
-              width: 200.0,
-              height: 200.0,
-            ),
             SizedBox(height: 16.0),
             Text(
               _product.name,
@@ -82,10 +87,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             ),
             SizedBox(height: 16.0),
             Text(
-              'Description: Add your product description here.',
+              'Description: ${_product.description.isNotEmpty ? _product.description : 'No description available'}',
               style: TextStyle(fontSize: 16.0),
             ),
-            SizedBox(height: 16.0,),
+            SizedBox(height: 16.0),
             IconButton(
               onPressed: () {
                 Provider.of<CartModel>(context, listen: false).addToCart(_product);

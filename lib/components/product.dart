@@ -26,17 +26,13 @@ class ProductList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProductDetailsPage(product: product, productId: '',),
+                  builder: (context) => ProductDetailsPage(product: product, productId: product.key,),
                 ),
               );
             },
-            leading: Image.network(
-              product.imageUrl,
-              width: 50.0,
-              height: 50.0,
-            ),
+
             title: Text(product.name),
-            subtitle: Text('Price: \$${product.price.toStringAsFixed(2)}'),
+            subtitle: Text('Price: \Tshs ${product.price.toStringAsFixed(2)}'),
             trailing: IconButton(
               onPressed: () {
                 Provider.of<CartModel>(context, listen: false).addToCart(product);

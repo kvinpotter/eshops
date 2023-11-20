@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eshops/components/cart.dart';
 import 'package:eshops/components/checkout.dart';
-import 'package:eshops/components/product.dart'; // Import the modified ProductList widget
+import 'package:eshops/components/product.dart';
 import 'package:eshops/models/cart_model.dart';
 import 'package:eshops/models/products.dart';
-import 'package:http/http.dart' as http;// Import the Product model
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: _currentIndex == 0
           ? FutureBuilder<List<Product>>(
-        
         future: fetchProducts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -72,15 +71,40 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<Product>> fetchProducts() async {
-    // Replace the URL with your actual server endpoint
-    final response = await http.get(Uri.parse('https://127.0.0.1:3306/load_products.php'));
+    try {
+      final response = await http.get(Uri.parse('http://192.168.100.44/load_products.php'));
 
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-      List<Product> fetchedProducts = data.map((item) => Product.fromJson(item)).toList();
-      return fetchedProducts;
-    } else {
-      throw Exception('Failed to load products');
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        if (response.body.isEmpty) {
+          throw Exception('Empty response');
+        }
+
+        List<dynamic> productList = json.decode(response.body);
+        List<Product> fetchedProducts = [];
+
+        print('Product list received:');
+        print(productList);
+
+        for (var productData in productList) {
+          if (productData is Map<String, dynamic>) {
+            Product product = Product.fromJson(productData);
+            fetchedProducts.add(product);
+          }
+        }
+
+        print('Fetched products:');
+        print(fetchedProducts);
+
+        return fetchedProducts;
+      } else {
+        throw Exception('Failed to load products: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching products: $e');
+      throw Exception('Error fetching products: $e');
     }
   }
 }

@@ -17,7 +17,7 @@ if ($conn->connect_error) {
     die(json_encode(array('error' => 'Connection failed: ' . $conn->connect_error)));
 }
 
-$sql = "SELECT * FROM product_information";
+$sql = "SELECT product_id, product_name, product_price FROM product_information";
 $result = $conn->query($sql);
 
 // Check for SQL errors
@@ -37,7 +37,7 @@ if (empty($products)) {
     die(json_encode(array('error' => 'No products found')));
 }
 
-// Output the JSON-encoded array
+// Output the JSON-encoded array directly
 echo json_encode($products);
 
 $conn->close();
