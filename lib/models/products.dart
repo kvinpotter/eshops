@@ -13,7 +13,15 @@ class Product {
     required this.price,
 
   });
-
+  // Add toJson method to convert Product to a JSON-encodable map
+  Map<String, dynamic> toJson() {
+    return {
+      'product_id': key,
+      'product_name': name,
+      'product_description': description,
+      'product_price': price,
+    };
+  }
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       key: json['product_id'],

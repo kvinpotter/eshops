@@ -1,11 +1,11 @@
 // checkout_page.dart
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/cart_model.dart';
 import 'package:http/http.dart' as http;
+import '../models/products.dart'; // Import your Product class
 
 class CheckoutPage extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
@@ -20,6 +20,12 @@ class CheckoutPage extends StatelessWidget {
       ),
       body: Consumer<CartModel>(
         builder: (context, cart, child) {
+          // Convert the list of cart items to a list of JSON-encodable maps
+          List<Map<String, dynamic>> orderItemsList = cart.cartItems.map((product) => product.toJson()).toList();
+
+          // Convert the list of maps to a JSON string
+          String orderItems = jsonEncode(orderItemsList);
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -31,7 +37,8 @@ class CheckoutPage extends StatelessWidget {
                     return ListTile(
                       title: Text(product.name),
                       subtitle: Text(
-                          'Price: \Tshs ${product.price.toStringAsFixed(2)}'),
+                        'Price: \Tshs ${product.price.toStringAsFixed(2)}',
+                      ),
                     );
                   },
                 ),
@@ -69,8 +76,7 @@ class CheckoutPage extends StatelessWidget {
                     ),
                     TextFormField(
                       controller: _paymentController,
-                      decoration:
-                      InputDecoration(labelText: 'Payment Details'),
+                      decoration: InputDecoration(labelText: 'Payment Details'),
                     ),
                   ],
                 ),
@@ -83,18 +89,16 @@ class CheckoutPage extends StatelessWidget {
                     String userAddress = _addressController.text;
                     String paymentDetails = _paymentController.text;
 
-                    // Convert the list of cart items to a JSON string
-                    String orderItems = jsonEncode(cart.cartItems);
-
                     // Send the order information to the PHP script
                     var response = await http.post(
                       Uri.parse('http://192.168.100.44/order.php'),
-                      body: {
+                      headers: {"Content-Type": "application/json"},
+                      body: jsonEncode({
                         'userName': userName,
                         'userAddress': userAddress,
                         'paymentDetails': paymentDetails,
                         'orderItems': orderItems,
-                      },
+                      }),
                     );
 
                     // Check the response from the server
