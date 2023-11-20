@@ -34,7 +34,7 @@ if ($conn->connect_error) {
 $orderDate = date('Y-m-d H:i:s');
 
 // Prepare and execute SQL query to insert data
-$sql = "INSERT INTO order_information (user, address, paymentDetails, orderDate, orderItems) VALUES ('$userName', '$userAddress', '$paymentDetails', '$orderDate', '$orderItems')";
+$sql = "INSERT INTO order_information (user, Address, paymentDetails, orderDate, orderItems) VALUES ('$userName', '$userAddress', '$paymentDetails', '$orderDate', '$orderItems')";
 
 if ($conn->query($sql) === TRUE) {
     // Database insertion successful
