@@ -1,4 +1,4 @@
-// checkout_page.dart
+1// checkout_page.dart
 
 import 'dart:convert';
 
@@ -89,7 +89,7 @@ class CheckoutPage extends StatelessWidget {
 
                     // Send the order information to the PHP script
                     var response = await http.post(
-                      Uri.parse('https://your_server.com/place_order.php'),
+                      Uri.parse('https://127.0.0.1:3306/order.php'),
                       body: {
                         'userName': userName,
                         'userAddress': userAddress,
