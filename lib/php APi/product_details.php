@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 }
 
 $productId = $_GET['product_id'];
-$sql = "SELECT * FROM products WHERE id = $productId";
+$sql = "SELECT product_information FROM product_information WHERE id = $productId";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
